@@ -25,14 +25,11 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "dbt_packages"
 
 
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
+on-run-start: "create table if not exists `raj-dbt.Retail_db_stage_Fact_bq.dbt_log` (start_time TIMESTAMP,invocation_id STRING,project_name STRING);INSERT INTO `raj-dbt.Retail_db_stage_Fact_bq.dbt_log` VALUES (CURRENT_TIMESTAMP(), '{{invocation_id}}','{{project_name}}');"
+on-run-end: "insert into `raj-dbt.Retail_db_stage_Fact_bq.Auditsio` values ('run_end2','end2');"
 
-# In this example config, we tell dbt to build all models in the example/ directory
-# as tables. These settings can be overridden in the individual model files
-# using the `{{ config(...) }}` macro.
 models:
-  retail_analytics:
+  retail_analytics: 
     schema: Fact_bq
     Fact:
       materialized: table

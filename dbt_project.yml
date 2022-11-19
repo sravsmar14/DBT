@@ -6,6 +6,9 @@ name: 'retail_analytics'
 version: '1.0.0'
 config-version: 2
 
+vars:
+  order_id: 2
+
 # This setting configures which "profile" dbt uses for this project.
 profile: 'default'
 
@@ -25,15 +28,16 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "dbt_packages"
 
 
-on-run-start: "create table if not exists `raj-dbt.Retail_db_stage_Fact_bq.dbt_log` (start_time TIMESTAMP,invocation_id STRING,project_name STRING);INSERT INTO `raj-dbt.Retail_db_stage_Fact_bq.dbt_log` VALUES (CURRENT_TIMESTAMP(), '{{invocation_id}}','{{project_name}}');"
-on-run-end: "insert into `raj-dbt.Retail_db_stage_Fact_bq.Auditsio` values ('run_end2','end2');"
+on-run-start: "create table if not exists `raj-dbt.Retail_db_audit.dbt_log` (start_time TIMESTAMP,invocation_id STRING,project_name STRING,Task String);"
+on-run-end: "INSERT INTO `raj-dbt.Retail_db_audit.dbt_log` VALUES (CURRENT_TIMESTAMP(), '{{invocation_id}}','{{project_name}}','Project_Level');"
 
 models:
   retail_analytics: 
-    schema: Fact_bq
     Fact:
+      schema: fact
       materialized: table
     # Applies to all files under models/example/
     stage:
+      schema: stage
       materialized: view
 

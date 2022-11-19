@@ -1,10 +1,9 @@
 {{
     config(
-       post_hook = "update `raj-dbt.Retail_db_stage_Fact_bq.Order_order_Items` set order_status='updated_Raj' where order_id=1;
-       insert into `raj-dbt.Retail_db_stage_Fact_bq.Auditsio` values ('from_hook_post','hook_pre_post');",
-       pre_hook = "insert into `raj-dbt.Retail_db_stage_Fact_bq.Auditsio` values ('from_hook_new','hook_pre_new');",
-       materialized='incremental'
-       
+       post_hook = "update {{ref ('stg_orders')}} set order_status='updated_Raj' where order_id=1;
+       insert into `raj-dbt.Retail_db_audit.dbt_log` values (CURRENT_TIMESTAMP(), '{{invocation_id}}','{{project_name}}','Order_OI_end');",
+       pre_hook = "insert into `raj-dbt.Retail_db_audit.dbt_log` values (CURRENT_TIMESTAMP(), '{{invocation_id}}','{{project_name}}','Order_OI_start');",
+       materialized='incremental'       
     )
 }}
 

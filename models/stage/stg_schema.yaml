@@ -1,17 +1,26 @@
 version: 2
 sources:
-  - name: Source_area
+  - name: staging_area
     description: A clone of a postgres application database
     database: raj-dbt
-    schema: Retail_db
+    schema: Retail_db_stage
     tables:
-      - name: Orders
-        description: Raw Orders data
-      - name: Order_items
-        description: Raw Order items data.
+      - name: stg_orders
+        description: Stage Orders data
+        columns:
+          - name: order_id
+            description: Primary key for Stg_orders.
+            tests:
+              - not_null
+              - unique:
+                  config:
+                    severity: warn
+
+      - name: stg_order_items
+        description: Stage Order items data.
         columns:
           - name: order_item_id
-            description: Primary key for order_item_id.
+            description: Primary key for stg_order_items.
             tests:
               - not_null
               - unique:

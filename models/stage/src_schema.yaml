@@ -1,0 +1,28 @@
+version: 2
+sources:
+  - name: Source_area
+    description: A clone of a postgres application database
+    database: raj-dbt
+    schema: Retail_db
+    tables:
+      - name: Orders
+        description: Raw Orders data
+        loaded_at_field: order_date
+        freshness:
+          warn_after: {count: 12, period: day}
+          error_after: {count: 24, period: hour}   
+          filter: date_diff(order_date,current_timestamp,day) < 1    
+      - name: Order_items
+        description: Raw Order items data.
+        columns:
+          - name: order_item_id
+            description: Primary key for order_item_id.
+            tests:
+              - not_null
+              - unique:
+                  config:
+                    severity: warn
+        #loaded_at_field: order_date
+        #freshness:
+          #warn_after: {count: 12, period: day}
+          #error_after: {count: 24, period: hour}

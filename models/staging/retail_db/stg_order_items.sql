@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 with order_items as(
 
     select * from {{source('Source_area','Order_items')}}

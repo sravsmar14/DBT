@@ -1,0 +1,82 @@
+version: 2
+sources:
+  - name: staging_area
+    description: A clone of a postgres application database
+    database: raj-dbt
+    schema: stage
+    tables:
+      - name: stg_orders
+        description: Stage Orders data
+        columns:
+          - name: order_id
+            description: Primary key for Stg_orders.
+            tests:
+              - not_null
+              - unique:
+                  config:
+                    severity: warn
+
+      - name: stg_order_items
+        description: Stage Order items data.
+        columns:
+          - name: order_item_id
+            description: Primary key for stg_order_items.
+            tests:
+              - not_null
+              - unique:
+                  config:
+                    severity: warn
+        #loaded_at_field: _etl_loaded_at
+        #freshness:
+          #warn_after: {count: 12, period: hour}
+          #error_after: {count: 24, period: hour}
+      - name: stg_customers
+        description: Stage customers data.
+        columns:
+          - name: customer_id
+            description: Primary key for stg_order_items.
+            tests:
+              - not_null
+              - unique:
+                  config:
+                    severity: warn
+      - name: stg_order_sf
+        description: Stage Order SF data.
+        columns:
+          - name: order_id
+            description: Primary key for stg_order_df.
+            tests:
+              - not_null
+              - unique:
+                  config:
+                    severity: warn
+          - name: status
+            description: "{{ doc('order_status') }}"
+            tests:
+              - accepted_values:
+                  values:
+                    - completed
+                    - shipped
+                    - returned
+                    - return_pending
+                    - placed
+          - name: customer_id
+            tests:
+              - relationships:
+                  to: ref('stg_customers')
+                  field: customer_id
+              - unique:
+                  config:
+                    store_failures: true
+                    schema: test_failures
+
+      - name: stg_payments
+        description: Stage payments data.
+        columns:
+          - name: payment_id
+            description: Primary key for stg_payments.
+            tests:
+              - not_null
+              - unique:
+                  config:
+                    severity: warn

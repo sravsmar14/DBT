@@ -65,10 +65,10 @@ sources:
               - relationships:
                   to: ref('stg_customers')
                   field: customer_id
-              - unique:
-                  config:
-                    store_failures: true
-                    schema: test_failures
+              #- unique:
+                  #config:
+                    #store_failures: true
+                    #schema: test_failures
 
       - name: stg_payments
         description: Stage payments data.

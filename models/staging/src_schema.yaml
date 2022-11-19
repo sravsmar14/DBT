@@ -26,3 +26,9 @@ sources:
         #freshness:
           #warn_after: {count: 12, period: day}
           #error_after: {count: 24, period: hour}
+      - name: customers
+        description: Raw customers data
+      - name: orders_sf
+        description: Raw orders_sf data
+      - name: payments
+        description: Raw payments data                

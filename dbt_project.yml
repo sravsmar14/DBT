@@ -33,11 +33,14 @@ on-run-end: "INSERT INTO `raj-dbt.Retail_db_audit.dbt_log` VALUES (CURRENT_TIMES
 
 models:
   retail_analytics: 
+    Dimension:
+      schema: dim
+      materialized: table
     Fact:
       schema: fact
       materialized: table
     # Applies to all files under models/example/
-    stage:
+    staging:
       schema: stage
       materialized: view
 
